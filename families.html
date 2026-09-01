@@ -6,7 +6,7 @@
   <title>Golden Image · Golden Families</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body data-page="families">
+<body data-screen="families">
   <div class="shell">
     <header class="topbar">
       <div class="topbar-inner">
@@ -18,6 +18,8 @@
           <div class="quick-actions">
             <a class="btn primary" href="register.html">등록</a>
             <a class="btn" href="edit.html">수정</a>
+            <a class="btn" href="security.html">Security</a>
+            <a class="btn" href="settings.html">설정</a>
           </div>
         </div>
         <nav class="tabs" aria-label="Golden Image tabs">
@@ -28,61 +30,10 @@
         </nav>
       </div>
     </header>
-
-    <main class="main">
-      <div class="page-head">
-        <div>
-          <h2 class="page-title">Golden Families</h2>
-          <p class="page-sub">Family, Variant, Runtime Key 기준으로 Golden Image를 분류합니다.</p>
-        </div>
-        <a class="btn primary" href="register.html?type=family">Family 등록</a>
-      </div>
-
-      <section class="grid cards">
-        <article class="panel">
-          <div class="spread"><strong>PyTorch GPU</strong><span class="badge ok">active</span></div>
-          <p class="muted small">CUDA 기반 PyTorch 학습/서빙 Golden Image Family</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Variant</th><th>Stable</th><th>Support</th><th></th></tr></thead>
-              <tbody>
-                <tr><td class="mono">cu124-py312</td><td>3</td><td>2027.12</td><td><a class="btn small" href="edit.html?family=pytorch-gpu">수정</a></td></tr>
-                <tr><td class="mono">cu121-py311</td><td>2</td><td>2027.06</td><td><a class="btn small" href="edit.html?family=pytorch-gpu">수정</a></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="spread"><strong>TensorFlow GPU</strong><span class="badge warn">review</span></div>
-          <p class="muted small">TensorFlow GPU 런타임과 MLflow 통합 Family</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Variant</th><th>Stable</th><th>Support</th><th></th></tr></thead>
-              <tbody>
-                <tr><td class="mono">cu121-py311</td><td>1</td><td>2027.03</td><td><a class="btn small" href="edit.html?family=tensorflow-gpu">수정</a></td></tr>
-                <tr><td class="mono">cu124-py312</td><td>0</td><td>검토중</td><td><a class="btn small" href="edit.html?family=tensorflow-gpu">수정</a></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="spread"><strong>Scikit-learn CPU</strong><span class="badge ok">active</span></div>
-          <p class="muted small">CPU 전용 Python ML 워크로드 Family</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Variant</th><th>Stable</th><th>Support</th><th></th></tr></thead>
-              <tbody>
-                <tr><td class="mono">py312</td><td>5</td><td>2028.01</td><td><a class="btn small" href="edit.html?family=sklearn-cpu">수정</a></td></tr>
-                <tr><td class="mono">py311</td><td>4</td><td>2027.08</td><td><a class="btn small" href="edit.html?family=sklearn-cpu">수정</a></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-      </section>
-    </main>
+    <main id="main" class="main"></main>
   </div>
-  <script src="app.js"></script>
+  <div id="modal-root"></div>
+  <div id="toast-root"></div>
+  <script type="module" src="shell.js"></script>
 </body>
 </html>
