@@ -332,6 +332,9 @@ export async function render(el, ctx) {
   }, label);
 
   el.append(h("div", { class: "row comp-filter" },
+    h("select", { onchange: (e) => setFilters({ stage: e.target.value }) },
+      h("option", { value: "" }, "Stage: 전체"),
+      ...STAGES.map((s) => h("option", { value: s, selected: s === stage }, `${s} · ${STAGE_LABELS[s]}`))),
     h("div", { class: "comp-tabs" },
       tabButton("", "전체"),
       ...STAGES.map((s) => tabButton(s, s))),

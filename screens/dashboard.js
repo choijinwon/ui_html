@@ -588,9 +588,11 @@ export async function render(el, ctx) {
   // Filters (persisted in hash params so refresh keeps them).
   const stateF = ctx.params.state || "";
   const familyF = ctx.params.family || "";
+  const runtimeF = ctx.params.runtime || "";
   const q = (ctx.params.q || "").toLowerCase();
+  const runtimes = [...new Set(images.map((r) => r.runtime).filter(Boolean))].sort();
   const setFilters = (next) => {
-    const merged = { state: stateF, family: familyF, q, ...next };
+    const merged = { state: stateF, family: familyF, runtime: runtimeF, q, ...next };
     const clean = {};
     for (const [k, v] of Object.entries(merged)) if (v) clean[k] = v;
     ctx.navigate("dashboard", clean);
@@ -603,6 +605,9 @@ export async function render(el, ctx) {
     h("select", { onchange: (e) => setFilters({ family: e.target.value }) },
       h("option", { value: "" }, "Family: 전체"),
       ...families.map((f) => h("option", { value: f.id, selected: f.id === familyF }, f.displayName || f.name))),
+    h("select", { onchange: (e) => setFilters({ runtime: e.target.value }) },
+      h("option", { value: "" }, "Runtime: 전체"),
+      ...runtimes.map((runtime) => h("option", { value: runtime, selected: runtime === runtimeF }, runtime))),
     h("input", {
       class: "gi-search", type: "search", placeholder: "Release · digest · family 검색…", value: ctx.params.q || "",
       onchange: (e) => setFilters({ q: e.target.value.trim() }),
@@ -612,10 +617,12 @@ export async function render(el, ctx) {
   const rows = images.filter((r) => {
     if (stateF && r.state !== stateF) return false;
     if (familyF && r.familyId !== familyF) return false;
+    if (runtimeF && r.runtime !== runtimeF) return false;
     if (q && !(
       (r.releaseName || "").toLowerCase().includes(q) ||
       (r.imageDigest || "").toLowerCase().includes(q) ||
-      (r.family || "").toLowerCase().includes(q)
+      (r.family || "").toLowerCase().includes(q) ||
+      (r.runtime || "").toLowerCase().includes(q)
     )) return false;
     return true;
   });

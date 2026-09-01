@@ -167,9 +167,25 @@ export async function render(el, ctx) {
     return form;
   }
 
-  el.append(h("div", { class: "grid edit-layout" },
-    componentVersionForm(),
-    componentActionForm(),
-    releaseActionForm(),
-    settingsForm()));
+  const sections = [
+    ["all", "전체", null],
+    ["component-version", "Component 새 버전", componentVersionForm()],
+    ["component-action", "Component 검증/승인", componentActionForm()],
+    ["release-action", "Release 상태 변경", releaseActionForm()],
+    ["settings", "설정 수정", settingsForm()],
+  ];
+  let selectedType = ctx.params.type && sections.some(([key]) => key === ctx.params.type) ? ctx.params.type : "all";
+  const host = h("div", {});
+  const typeSelect = h("select", { onchange: (e) => { selectedType = e.target.value; renderSections(); } },
+    ...sections.map(([key, label]) => h("option", { value: key, selected: key === selectedType }, `수정 작업: ${label}`)));
+
+  function renderSections() {
+    const visible = sections.filter(([key]) => selectedType === "all" ? key !== "all" : key === selectedType);
+    host.replaceChildren(h("div", { class: "grid edit-layout" }, ...visible.map(([, , node]) => node)));
+  }
+
+  el.append(h("div", { class: "panel", style: "margin-bottom:14px;" },
+    h("div", { class: "grid form-grid" }, field(h, "수정 작업 선택", typeSelect))),
+    host);
+  renderSections();
 }

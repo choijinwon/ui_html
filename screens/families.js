@@ -15,7 +15,7 @@ export async function render(el, ctx) {
   const { api, h, badge, fmtDate } = ctx;
 
   const families = await api.listFamilies();
-  let filter = "all";
+  let filter = ctx.params.status || "all";
 
   const shortId = (id) => (id && id.length > 14 ? id.slice(0, 14) + "…" : id);
   const stat = (v, k) =>
@@ -36,11 +36,19 @@ export async function render(el, ctx) {
   el.append(filterRow, cardsHost);
 
   function renderFilters() {
-    filterRow.replaceChildren(...FILTERS.map(([value, label]) =>
-      h("button", {
-        class: "sm" + (filter === value ? " primary" : ""),
-        onclick: () => { filter = value; renderFilters(); renderCards(); },
-      }, label)));
+    const setFilter = (value) => {
+      filter = value;
+      renderFilters();
+      renderCards();
+    };
+    filterRow.replaceChildren(
+      h("select", { onchange: (e) => setFilter(e.target.value) },
+        ...FILTERS.map(([value, label]) => h("option", { value, selected: value === filter }, `상태: ${label}`))),
+      ...FILTERS.map(([value, label]) =>
+        h("button", {
+          class: "sm" + (filter === value ? " primary" : ""),
+          onclick: () => setFilter(value),
+        }, label)));
   }
 
   function renderCards() {

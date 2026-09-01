@@ -206,7 +206,10 @@ export async function confirmModal(title, message, { danger = false, label = "í™
 /* --------------------------------------------------------------- router */
 export function navigate(screen, params = {}) {
   const page = PAGE_BY_SCREEN[screen] || PAGE_BY_SCREEN.dashboard;
-  const p = new URLSearchParams(params).toString();
+  const currentApi = new URLSearchParams(location.search).get("api");
+  const nextParams = { ...params };
+  if (currentApi && nextParams.api === undefined) nextParams.api = currentApi;
+  const p = new URLSearchParams(nextParams).toString();
   location.href = `${page}${p ? "?" + p : ""}`;
 }
 

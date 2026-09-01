@@ -190,6 +190,10 @@ a { color: inherit; }
   align-items: center;
   flex-wrap: wrap;
 }
+.row > select,
+.row > input {
+  width: auto;
+}
 .spread {
   display: flex;
   justify-content: space-between;

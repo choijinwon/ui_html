@@ -53,6 +53,7 @@ index.html?api=http://127.0.0.1:8000/api/v1
 
 - Badge: 상태 표시
 - Table: 목록 및 상세 데이터 표시
+- Select: 상태, Family, Runtime, Stage, 등록 유형, 수정 작업, Release 선택
 - Modal: 상세 보기, 승인, 예외 승인, Dockerfile 보기
 - Toast: 작업 성공/실패 알림
 - Form Modal: 등록/승인/변경 입력 폼
@@ -64,7 +65,7 @@ index.html?api=http://127.0.0.1:8000/api/v1
 - API: `GET /images`
 - 전체 Golden Image 릴리스 목록을 표시한다.
 - Family, Runtime, Release, State, Channel, Registry Image, Digest, 생성일을 확인할 수 있다.
-- 상태, Family, Runtime, 검색 조건으로 필터링할 수 있다.
+- 상태, Family, Runtime select와 검색 조건으로 필터링할 수 있다.
 
 ### 5.2 릴리스 상세 조회
 
@@ -111,6 +112,7 @@ index.html?api=http://127.0.0.1:8000/api/v1
   - active
   - deprecated
   - retired
+- 상태 필터는 버튼과 select를 모두 제공한다.
 
 ### 6.2 Variant 목록 조회
 
@@ -141,7 +143,7 @@ index.html?api=http://127.0.0.1:8000/api/v1
 
 - API: `GET /components`
 - G0~G5 전체 Component를 표시한다.
-- Stage, 상태, 이름 검색 필터를 제공한다.
+- Stage select, Stage 버튼, 상태 select, 이름 검색 필터를 제공한다.
 
 ### 7.2 Component 등록
 
@@ -240,6 +242,10 @@ index.html?api=http://127.0.0.1:8000/api/v1
 
 등록 화면은 운영자가 주요 리소스를 한 화면에서 생성할 수 있도록 제공한다.
 
+- 등록 유형 select를 제공한다.
+- `전체`, `Family 등록`, `Variant 등록`, `Component 등록`, `Compatibility Rule 등록`, `Golden Image Recipe 등록`을 선택할 수 있다.
+- `전체` 선택 시 모든 등록 폼을 표시한다.
+
 ### 9.1 Family 등록
 
 - `POST /families`를 호출한다.
@@ -274,6 +280,10 @@ index.html?api=http://127.0.0.1:8000/api/v1
 ## 10. 수정 화면
 
 백엔드가 현재 제공하는 변경 API 범위 안에서 수정 기능을 제공한다.
+
+- 수정 작업 select를 제공한다.
+- `전체`, `Component 새 버전`, `Component 검증/승인`, `Release 상태 변경`, `설정 수정`을 선택할 수 있다.
+- `전체` 선택 시 모든 수정 폼을 표시한다.
 
 ### 10.1 Component 새 버전 등록
 

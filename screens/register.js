@@ -216,10 +216,26 @@ export async function render(el, ctx) {
     return form;
   }
 
-  el.append(h("div", { class: "grid reg-layout" },
-    familyForm(),
-    variantForm(),
-    componentForm(),
-    ruleForm(),
-    recipeForm()));
+  const sections = [
+    ["all", "전체", null],
+    ["family", "Family 등록", familyForm()],
+    ["variant", "Variant 등록", variantForm()],
+    ["component", "Component 등록", componentForm()],
+    ["rule", "Compatibility Rule 등록", ruleForm()],
+    ["recipe", "Golden Image Recipe 등록", recipeForm()],
+  ];
+  let selectedType = ctx.params.type && sections.some(([key]) => key === ctx.params.type) ? ctx.params.type : "all";
+  const host = h("div", {});
+  const typeSelect = h("select", { onchange: (e) => { selectedType = e.target.value; renderSections(); } },
+    ...sections.map(([key, label]) => h("option", { value: key, selected: key === selectedType }, `등록 유형: ${label}`)));
+
+  function renderSections() {
+    const visible = sections.filter(([key]) => selectedType === "all" ? key !== "all" : key === selectedType);
+    host.replaceChildren(h("div", { class: "grid reg-layout" }, ...visible.map(([, , node]) => node)));
+  }
+
+  el.append(h("div", { class: "panel", style: "margin-bottom:14px;" },
+    h("div", { class: "grid form-grid" }, field(h, "등록 유형 선택", typeSelect))),
+    host);
+  renderSections();
 }
