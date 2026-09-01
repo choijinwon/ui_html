@@ -36,7 +36,8 @@ td.reg-cell .reg-ref { font-family: var(--mono); font-size: 11.5px; word-break: 
 .det-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 12px; }
 .det-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
 .det-stats .stat { flex: 1 1 160px; }
-.stage-dag.wrap { flex-wrap: wrap; overflow: visible; gap: 4px 0; }
+.stage-dag.wrap { grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 10px; overflow: visible; }
+.stage-dag.wrap .stage-arrow { display: none; }
 .stage-node.clickable { cursor: pointer; transition: transform .08s, box-shadow .08s; }
 .stage-node.clickable:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.35); }
 .stage-node .stage-ref { font-family: var(--mono); font-size: 11px; word-break: break-all; }
@@ -380,7 +381,7 @@ export async function render(el, ctx) {
     });
     el.append(h("div", { class: "panel", style: "margin-bottom:14px;" },
       h("div", { class: "spread", style: "margin-bottom:8px;" },
-        h("h3", { style: "margin:0;" }, "Stage DAG (G0~G5)"),
+        h("h3", { style: "margin:0;" }, "Stage Composition (G0~G5)"),
         h("span", { class: "small muted" }, "노드 클릭 → 컴포넌트 상세"),
         latestBuild ? h("span", { class: "row small muted", style: "gap:6px;" }, "최근 빌드 plan 기준", badge(latestBuild.status)) : h("span", { class: "small muted" }, "빌드 이력 없음 · 전체 reuse")),
       recipe ? dag : h("div", { class: "empty" }, "Recipe가 없습니다.")));

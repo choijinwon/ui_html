@@ -72,7 +72,7 @@ index.html?api=http://127.0.0.1:8000/api/v1
   - `GET /builds?releaseId={releaseId}`
   - `GET /releases/{releaseId}/usage`
 - 릴리스 행 클릭 시 상세 화면을 표시한다.
-- Stage DAG를 G0~G5 순서로 보여준다.
+- Stage Composition을 G0~G5 순서의 단계별 카드로 보여준다.
 - 각 Stage 노드를 클릭하면 연결된 Component 상세를 확인할 수 있다.
 
 ### 5.3 빌드 작업

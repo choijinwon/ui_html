@@ -300,14 +300,16 @@ button:disabled {
 
 .stage-line,
 .stage-dag {
-  display: flex;
-  gap: 0;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 10px;
+  overflow: visible;
   padding: 4px 0;
 }
 .stage-node {
-  min-width: 126px;
-  flex: none;
+  min-width: 0;
+  width: 100%;
+  min-height: 86px;
   padding: 10px 14px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -320,8 +322,7 @@ button:disabled {
   font-weight: 750;
 }
 .stage-arrow {
-  align-self: center;
-  padding: 0 6px;
+  display: none;
   color: var(--muted);
 }
 
