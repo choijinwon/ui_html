@@ -20,6 +20,7 @@ const PAGE_BY_SCREEN = {
   register: "register.html",
   edit: "edit.html",
 };
+const GOLDEN_IMAGE_SCREENS = new Set(["dashboard", "families", "components", "matrix"]);
 
 export const STAGES = ["G0", "G1", "G2", "G3", "G4", "G5"];
 export const STAGE_LABELS = {
@@ -218,6 +219,8 @@ const injectedCss = new Set();
 async function renderCurrent() {
   const { name, params } = route();
   document.querySelectorAll("[data-nav]").forEach((a) => a.classList.toggle("active", a.dataset.nav === name));
+  const menuName = GOLDEN_IMAGE_SCREENS.has(name) ? "golden-image" : name;
+  document.querySelectorAll("[data-menu]").forEach((a) => a.classList.toggle("active", a.dataset.menu === menuName));
   const screen = SCREENS[name];
   if (screen.css && !injectedCss.has(name)) {
     document.head.append(h("style", {}, screen.css));

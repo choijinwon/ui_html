@@ -44,6 +44,8 @@ index.html?api=http://127.0.0.1:8000/api/v1
 - 상단에 `Golden Image` 브랜드 영역을 표시한다.
 - 본문 좌측에 메뉴 영역을 표시한다.
 - 좌측 메뉴의 대표 항목은 `golden-image`이다.
+- `golden-image` 메뉴의 기본 진입 화면은 `index.html`이다.
+- `Release Dashboard`, `Golden Families`, `Component Catalog`, `Compatibility Matrix`는 `golden-image` 메뉴 그룹의 탭으로 동작한다.
 - 주요 4개 메뉴는 탭 형태로 제공한다.
 - 등록, 수정, Security, 설정은 상단 빠른 액션 버튼으로 제공한다.
 
