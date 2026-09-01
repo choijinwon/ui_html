@@ -5,36 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>golden-image · Component Catalog</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="golden-image.js" defer></script>
 </head>
-<body>
+<body data-page="components">
   <div class="shell">
     <header class="topbar">
       <div class="topbar-inner">
         <h1 class="brand">golden-image</h1>
         <p class="brand-sub">Golden Image 운영 화면</p>
-        <nav class="tabs" aria-label="golden-image tabs">
-          <a href="index.html">Release Dashboard</a>
-          <a href="families.html">Golden Families</a>
-          <a class="active" href="components.html">Component Catalog</a>
-          <a href="matrix.html">Compatibility Matrix</a>
-        </nav>
       </div>
     </header>
 
     <div class="content-layout">
       <aside class="side-menu" aria-label="Main menu">
         <nav class="side-menu-inner">
-          <div class="side-menu-title">Menu</div>
           <a class="active" href="index.html">golden-image</a>
         </nav>
       </aside>
 
       <main class="main">
+        <section class="golden-image-workspace">
+          <div class="workspace-head">
+            <div>
+              <div class="workspace-label">golden-image</div>
+              <h2 class="workspace-title">Golden Image</h2>
+            </div>
+          </div>
+
+          <nav class="workspace-tabs slide-tabs tab-components" role="tablist" aria-label="golden-image tabs">
+            <a role="tab" aria-selected="false" href="index.html">Release Dashboard</a>
+            <a role="tab" aria-selected="false" href="families.html">Golden Families</a>
+            <a class="active" role="tab" aria-selected="true" aria-current="page" href="components.html">Component Catalog</a>
+            <a role="tab" aria-selected="false" href="matrix.html">Compatibility Matrix</a>
+          </nav>
+
         <div class="page-head">
           <div>
             <h2 class="page-title">Component Catalog</h2>
             <p class="page-sub">G0부터 G5까지 Golden Image 구성 Component를 관리합니다.</p>
           </div>
+          <button class="primary" type="button" data-add="components">등록</button>
         </div>
 
         <section class="panel">
@@ -42,21 +52,24 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>Stage</th><th>Name</th><th>Version</th><th>Status</th><th>Owner</th><th>Source</th></tr>
+                <tr><th>Stage</th><th>Name</th><th>Version</th><th>Status</th><th>Owner</th><th>Source</th><th>작업</th></tr>
               </thead>
-              <tbody>
-                <tr><td class="mono">G0</td><td>ubi9-foundation</td><td>9.4</td><td><span class="badge ok">approved</span></td><td>platform-infra</td><td class="mono">main@f021ab1</td></tr>
-                <tr><td class="mono">G1</td><td>cuda-runtime</td><td>12.4.1</td><td><span class="badge ok">approved</span></td><td>gpu-platform</td><td class="mono">main@91c3e28</td></tr>
-                <tr><td class="mono">G2</td><td>python</td><td>3.12</td><td><span class="badge ok">approved</span></td><td>runtime</td><td class="mono">main@33bc927</td></tr>
-                <tr><td class="mono">G3</td><td>pytorch</td><td>2.4.0</td><td><span class="badge info">candidate</span></td><td>ml-platform</td><td class="mono">release@a57b0e1</td></tr>
-                <tr><td class="mono">G4</td><td>mlflow</td><td>2.16.0</td><td><span class="badge ok">approved</span></td><td>ml-platform</td><td class="mono">main@9c81a22</td></tr>
-                <tr><td class="mono">G5</td><td>openvscode</td><td>1.92.2</td><td><span class="badge warn">draft</span></td><td>developer-platform</td><td class="mono">feature@72f19d0</td></tr>
+              <tbody id="componentRows">
+                <tr><td class="mono">G0</td><td>ubi9-foundation</td><td>9.4</td><td><span class="badge ok">approved</span></td><td>platform-infra</td><td class="mono">main@f021ab1</td><td><div class="row row-actions"><button class="small" type="button" data-type="components" data-edit="comp-1">수정</button><button class="small danger" type="button" data-type="components" data-delete="comp-1">삭제</button></div></td></tr>
+                <tr><td class="mono">G1</td><td>cuda-runtime</td><td>12.4.1</td><td><span class="badge ok">approved</span></td><td>gpu-platform</td><td class="mono">main@91c3e28</td><td><div class="row row-actions"><button class="small" type="button" data-type="components" data-edit="comp-2">수정</button><button class="small danger" type="button" data-type="components" data-delete="comp-2">삭제</button></div></td></tr>
+                <tr><td class="mono">G2</td><td>python</td><td>3.12</td><td><span class="badge ok">approved</span></td><td>runtime</td><td class="mono">main@33bc927</td><td><div class="row row-actions"><button class="small" type="button" data-type="components" data-edit="comp-3">수정</button><button class="small danger" type="button" data-type="components" data-delete="comp-3">삭제</button></div></td></tr>
+                <tr><td class="mono">G3</td><td>pytorch</td><td>2.4.0</td><td><span class="badge info">candidate</span></td><td>ml-platform</td><td class="mono">release@a57b0e1</td><td><div class="row row-actions"><button class="small" type="button" data-type="components" data-edit="comp-4">수정</button><button class="small danger" type="button" data-type="components" data-delete="comp-4">삭제</button></div></td></tr>
+                <tr><td class="mono">G4</td><td>mlflow</td><td>2.16.0</td><td><span class="badge ok">approved</span></td><td>ml-platform</td><td class="mono">main@9c81a22</td><td><div class="row row-actions"><button class="small" type="button" data-type="components" data-edit="comp-5">수정</button><button class="small danger" type="button" data-type="components" data-delete="comp-5">삭제</button></div></td></tr>
+                <tr><td class="mono">G5</td><td>openvscode</td><td>1.92.2</td><td><span class="badge warn">draft</span></td><td>developer-platform</td><td class="mono">feature@72f19d0</td><td><div class="row row-actions"><button class="small" type="button" data-type="components" data-edit="comp-6">수정</button><button class="small danger" type="button" data-type="components" data-delete="comp-6">삭제</button></div></td></tr>
               </tbody>
             </table>
           </div>
         </section>
+        </section>
       </main>
     </div>
   </div>
+  <div id="modal-root"></div>
+  <div id="toast-root"></div>
 </body>
 </html>
