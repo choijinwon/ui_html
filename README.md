@@ -2,6 +2,10 @@
 
 Golden Image standalone HTML UI.
 
+## Documents
+
+- `FEATURE_SPEC.md` - 기능명세서
+
 ## Pages
 
 - `index.html` - Release Dashboard
