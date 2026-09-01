@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Golden Image</title>
+  <style>
+    :root {
+      --bg: #0f141a;
+      --side: #0b0f14;
+      --panel: #161d26;
+      --panel-2: #1c2530;
+      --border: #2a3644;
+      --text: #dce5ee;
+      --muted: #8aa0b4;
+      --accent: #4da3ff;
+      --accent-dim: #234a73;
+      --ok: #3fb964;
+      --warn: #e0a53a;
+      --err: #e05a4e;
+      --mono: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.5 "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+    }
+
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 220px;
+      flex: none;
+      background: var(--side);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand {
+      padding: 20px 18px 16px;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.25;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand span { display: block; color: var(--accent); }
+    .menu { padding: 10px 8px; flex: 1; }
+    .menu a {
+      display: block;
+      padding: 9px 12px;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      background: var(--accent-dim);
+    }
+    .sidebar-foot {
+      padding: 12px 18px;
+      color: var(--muted);
+      font-size: 11.5px;
+      border-top: 1px solid var(--border);
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 26px 32px 60px;
+    }
+    .page-title { margin: 0 0 4px; font-size: 22px; font-weight: 750; }
+    .page-sub { margin: 0 0 20px; color: var(--muted); }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin: 0 0 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 13px;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: 8px 8px 0 0;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .tab:hover {
+      color: var(--text);
+      background: var(--panel);
+    }
+    .tab.active {
+      color: #fff;
+      background: var(--panel);
+      border-color: var(--border);
+      box-shadow: inset 0 2px 0 var(--accent);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .grid { display: grid; gap: 14px; }
+    .stats { grid-template-columns: repeat(4, minmax(150px, 1fr)); }
+    .cols { grid-template-columns: 1.4fr .9fr; align-items: start; }
+    .cards { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .panel h3 { margin: 0 0 12px; font-size: 14.5px; }
+    .stat { display: flex; flex-direction: column; gap: 2px; }
+    .stat .v { font-size: 22px; font-weight: 750; }
+    .stat .k { color: var(--muted); font-size: 12px; }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .mono { font-family: var(--mono); font-size: 12.5px; }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .spread { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .table-wrap { overflow-x: auto; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 99px;
+      font-size: 11.5px;
+      font-weight: 650;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      white-space: nowrap;
+    }
+    .badge.ok { color: var(--ok); border-color: var(--ok); background: rgba(63,185,100,.1); }
+    .badge.warn { color: var(--warn); border-color: var(--warn); background: rgba(224,165,58,.1); }
+    .badge.err { color: var(--err); border-color: var(--err); background: rgba(224,90,78,.1); }
+    .badge.info { color: var(--accent); border-color: var(--accent); background: rgba(77,163,255,.1); }
+
+    .stage-line {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      padding: 4px 0;
+    }
+    .stage-node {
+      min-width: 126px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      flex: none;
+    }
+    .stage-key { color: var(--accent); font-family: var(--mono); font-size: 11px; font-weight: 700; }
+    .stage-arrow { align-self: center; color: var(--muted); padding: 0 6px; flex: none; }
+
+    .matrix {
+      border-collapse: separate;
+      border-spacing: 4px;
+      min-width: 620px;
+    }
+    .matrix th { text-transform: none; letter-spacing: 0; }
+    .matrix td {
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: var(--panel-2);
+    }
+    .matrix .supported { background: rgba(63,185,100,.12); border-color: rgba(63,185,100,.55); }
+    .matrix .review { background: rgba(224,165,58,.12); border-color: rgba(224,165,58,.55); }
+    .matrix .blocked { background: rgba(224,90,78,.14); border-color: rgba(224,90,78,.65); }
+
+    @media (max-width: 860px) {
+      .app { display: block; }
+      .sidebar {
+        width: auto;
+        height: auto;
+        position: static;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .main { padding: 20px 16px 44px; }
+      .stats, .cols { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Golden Image<span>Factory</span></div>
+      <nav class="menu">
+        <a href="#release-dashboard">Golden Image</a>
+      </nav>
+      <div class="sidebar-foot">MLflow Platform · Operator Console</div>
+    </aside>
+
+    <main class="main">
+      <h1 class="page-title">Golden Image</h1>
+      <p class="page-sub">Golden Image 운영 화면을 4개 탭으로 구성했습니다.</p>
+
+      <nav class="tabs" aria-label="Golden Image tabs">
+        <button class="tab active" type="button" data-tab="release-dashboard">Release Dashboard</button>
+        <button class="tab" type="button" data-tab="golden-families">Golden Families</button>
+        <button class="tab" type="button" data-tab="component-catalog">Component Catalog</button>
+        <button class="tab" type="button" data-tab="compatibility-matrix">Compatibility Matrix</button>
+      </nav>
+
+      <section id="release-dashboard" class="tab-panel active">
+        <div class="grid stats">
+          <div class="panel stat"><div class="v">18</div><div class="k">Golden Images</div></div>
+          <div class="panel stat"><div class="v">12</div><div class="k">Stable</div></div>
+          <div class="panel stat"><div class="v">4</div><div class="k">Candidate</div></div>
+          <div class="panel stat"><div class="v">2</div><div class="k">Blocked</div></div>
+        </div>
+
+        <div class="grid cols" style="margin-top:14px;">
+          <div class="panel">
+            <h3>Recent Releases</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Family</th>
+                    <th>Version</th>
+                    <th>Status</th>
+                    <th>Registry</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">mlflow-pytorch-gpu</td>
+                    <td>PyTorch GPU</td>
+                    <td>2026.09.01</td>
+                    <td><span class="badge ok">stable</span></td>
+                    <td class="mono">registry/golden/pytorch:2026.09.01</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">mlflow-sklearn-cpu</td>
+                    <td>Scikit-learn CPU</td>
+                    <td>2026.08.28</td>
+                    <td><span class="badge info">candidate</span></td>
+                    <td class="mono">registry/golden/sklearn:2026.08.28</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">mlflow-tensorflow-gpu</td>
+                    <td>TensorFlow GPU</td>
+                    <td>2026.08.20</td>
+                    <td><span class="badge err">blocked</span></td>
+                    <td class="mono">registry/golden/tensorflow:2026.08.20</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Stage Composition</h3>
+            <div class="stage-line">
+              <div class="stage-node"><div class="stage-key">G0</div><strong>Foundation</strong></div>
+              <div class="stage-arrow">→</div>
+              <div class="stage-node"><div class="stage-key">G1</div><strong>Accelerator</strong></div>
+              <div class="stage-arrow">→</div>
+              <div class="stage-node"><div class="stage-key">G2</div><strong>Language</strong></div>
+              <div class="stage-arrow">→</div>
+              <div class="stage-node"><div class="stage-key">G3</div><strong>Framework</strong></div>
+              <div class="stage-arrow">→</div>
+              <div class="stage-node"><div class="stage-key">G4</div><strong>ML Platform</strong></div>
+              <div class="stage-arrow">→</div>
+              <div class="stage-node"><div class="stage-key">G5</div><strong>IDE</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="golden-families" class="tab-panel">
+        <div class="grid cards">
+          <div class="panel">
+            <div class="spread"><strong>PyTorch GPU</strong><span class="badge ok">active</span></div>
+            <p class="muted small">CUDA 기반 PyTorch 학습/서빙 Golden Image Family</p>
+            <div class="row">
+              <span class="badge info">linux/amd64</span>
+              <span class="badge">cu124-py312</span>
+              <span class="badge ok">stable 3</span>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="spread"><strong>TensorFlow GPU</strong><span class="badge warn">review</span></div>
+            <p class="muted small">TensorFlow GPU 런타임과 MLflow 통합 Family</p>
+            <div class="row">
+              <span class="badge info">linux/amd64</span>
+              <span class="badge">cu121-py311</span>
+              <span class="badge info">candidate 1</span>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="spread"><strong>Scikit-learn CPU</strong><span class="badge ok">active</span></div>
+            <p class="muted small">CPU 전용 Python ML 워크로드 Family</p>
+            <div class="row">
+              <span class="badge info">linux/amd64</span>
+              <span class="badge">py312</span>
+              <span class="badge ok">stable 5</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="component-catalog" class="tab-panel">
+        <div class="panel">
+          <h3>Component Catalog</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Stage</th>
+                  <th>Name</th>
+                  <th>Version</th>
+                  <th>Status</th>
+                  <th>Owner</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="mono">G0</td><td>ubi9-foundation</td><td>9.4</td><td><span class="badge ok">approved</span></td><td>platform-infra</td></tr>
+                <tr><td class="mono">G1</td><td>cuda-runtime</td><td>12.4.1</td><td><span class="badge ok">approved</span></td><td>gpu-platform</td></tr>
+                <tr><td class="mono">G2</td><td>python</td><td>3.12</td><td><span class="badge ok">approved</span></td><td>runtime</td></tr>
+                <tr><td class="mono">G3</td><td>pytorch</td><td>2.4.0</td><td><span class="badge info">candidate</span></td><td>ml-platform</td></tr>
+                <tr><td class="mono">G4</td><td>mlflow</td><td>2.16.0</td><td><span class="badge ok">approved</span></td><td>ml-platform</td></tr>
+                <tr><td class="mono">G5</td><td>openvscode</td><td>1.92.2</td><td><span class="badge warn">draft</span></td><td>developer-platform</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="compatibility-matrix" class="tab-panel">
+        <div class="grid cols">
+          <div class="panel">
+            <h3>Framework × Python/CUDA</h3>
+            <div class="table-wrap">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th>Framework</th>
+                    <th>py311-cu121</th>
+                    <th>py312-cu124</th>
+                    <th>py313-cu124</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>pytorch 2.4</th>
+                    <td class="supported">supported</td>
+                    <td class="supported">supported</td>
+                    <td class="review">review</td>
+                  </tr>
+                  <tr>
+                    <th>tensorflow 2.16</th>
+                    <td class="supported">supported</td>
+                    <td class="review">review</td>
+                    <td class="blocked">blocked</td>
+                  </tr>
+                  <tr>
+                    <th>sklearn 1.5</th>
+                    <td class="supported">supported</td>
+                    <td class="supported">supported</td>
+                    <td class="supported">supported</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Rules</h3>
+            <p class="muted small">blocked 조합은 Release 승인 전에 예외 승인 또는 Component 교체가 필요합니다.</p>
+            <div class="row">
+              <span class="badge ok">supported</span>
+              <span class="badge warn">review</span>
+              <span class="badge err">blocked</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const panels = Array.from(document.querySelectorAll(".tab-panel"));
+
+    function activate(tabId) {
+      tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.tab === tabId));
+      panels.forEach((panel) => panel.classList.toggle("active", panel.id === tabId));
+      if (location.hash.slice(1) !== tabId) history.replaceState(null, "", "#" + tabId);
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => activate(tab.dataset.tab));
+    });
+
+    const initial = location.hash.slice(1);
+    if (initial && document.getElementById(initial)) {
+      activate(initial);
+    }
+  </script>
+</body>
+</html>
