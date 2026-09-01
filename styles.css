@@ -310,6 +310,11 @@ button:disabled {
   overflow: visible;
   padding: 4px 0;
 }
+.stage-composition {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 10px;
+}
 .stage-node {
   min-width: 0;
   width: 100%;
@@ -328,6 +333,10 @@ button:disabled {
 .stage-arrow {
   display: none;
   color: var(--muted);
+}
+.stage-ref {
+  margin-top: 6px;
+  word-break: break-all;
 }
 
 .matrix {
